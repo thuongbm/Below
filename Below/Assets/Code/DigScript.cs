@@ -7,11 +7,18 @@ public class DigScript : MonoBehaviour
     // Start is called once before the first execution of Update after the MonoBehaviour is created
 
     public Tilemap tileMap;
+    public TileBase[] damageStages;
+    public float diggerDelay = 1.2f;
+    
     private Camera cam;
+    private Vector3Int currentTilePos;
+    private float holdTime = 0f;
+    
     
     void Start()
     {
         cam = Camera.main;
+        currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
     }
 
     // Update is called once per frame
@@ -24,10 +31,19 @@ public class DigScript : MonoBehaviour
 
             if (tileMap.GetTile(cellPos) != null)
             {
-                if (IsAccessible(cellPos))
+                if (IsAccessible(cellPos) && cellPos == currentTilePos)
                 {
-                    tileMap.SetTile(cellPos, null);
-                    Debug.Log("Deleted");
+                    // thêm thuật toán
+                    holdTime += Time.deltaTime;
+                    float progress = holdTime / diggerDelay;
+                    
+                    
+                    // 
+                    if (progress >= 1)
+                    {
+                        tileMap.SetTile(cellPos, null);
+                        Debug.Log("Deleted");
+                    }
                 }
 
                 else
