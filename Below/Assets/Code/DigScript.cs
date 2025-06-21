@@ -1,56 +1,68 @@
-using NUnit.Framework.Constraints;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
 public class DigScript : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-
     public Tilemap tileMap;
-    public TileBase[] damageStages;
-    public float diggerDelay = 1.2f;
-    
+    public TileBase[] damageStages; // damageStages[3] là tile nứt
+    public float diggerDelay = 4f;
+
     private Camera cam;
     private Vector3Int currentTilePos;
     private float holdTime = 0f;
-    
-    
+
     void Start()
     {
         cam = Camera.main;
         currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
     }
 
-    // Update is called once per frame
     void Update()
     {
-        if (Input.GetMouseButtonDown(0))
+        if (Input.GetMouseButton(0)) // Giữ chuột trái
         {
             Vector3 mousePos = cam.ScreenToWorldPoint(Input.mousePosition);
             Vector3Int cellPos = tileMap.WorldToCell(mousePos);
 
-            if (tileMap.GetTile(cellPos) != null)
+            if (tileMap.GetTile(cellPos) != null && IsAccessible(cellPos))
             {
-                if (IsAccessible(cellPos) && cellPos == currentTilePos)
+                if (cellPos == currentTilePos)
                 {
-                    // thêm thuật toán
                     holdTime += Time.deltaTime;
-                    float progress = holdTime / diggerDelay;
-                    
-                    
-                    // 
-                    if (progress >= 1)
+
+                    if (holdTime >= diggerDelay / 2f && tileMap.GetTile(cellPos) != damageStages[3])
                     {
-                        tileMap.SetTile(cellPos, null);
+                        tileMap.SetTile(cellPos, damageStages[3]);
+                        Debug.Log("Cracked");
+                    }
+
+                    if (holdTime >= diggerDelay)
+                    {
+                        tileMap.SetTile(cellPos, null); // Xoá tile
                         Debug.Log("Deleted");
+                        holdTime = 0f;
+                        currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
                     }
                 }
-
                 else
                 {
-                    Debug.Log("Not Accessible");
+                    // Mới chuyển sang tile khác → reset
+                    currentTilePos = cellPos;
+                    holdTime = 0f;
                 }
             }
+            else
+            {
+                // Không có tile hoặc không được đào
+                holdTime = 0f;
+                currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
+            }
+        }
+        else
+        {
+            // Nhả chuột → reset
+            holdTime = 0f;
+            currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
         }
     }
 
@@ -72,8 +84,7 @@ public class DigScript : MonoBehaviour
         {
             if (tileMap.GetTile(tilePos + direction) == null)
             {
-                Debug.Log("Is Accessible?");
-                return true;
+                return true; // Có không khí xung quanh
             }
         }
         return false;
