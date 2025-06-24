@@ -1888,6 +1888,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   tileMap: {fileID: 1140744881}
+  damageStages:
+  - {fileID: 11400000, guid: 2246b6170bb9dd24bbc3c9c3c90624cc, type: 2}
+  - {fileID: 11400000, guid: 8613d5b86ea5e7841912b99d6710d83e, type: 2}
+  - {fileID: 11400000, guid: 2e947413d8250534093f48a3aa29cacd, type: 2}
+  - {fileID: 11400000, guid: 5bb3379432363d940bb1376f0436e164, type: 2}
+  diggerDelay: 4
 --- !u!4 &1551717406
 Transform:
   m_ObjectHideFlags: 0
