@@ -6,9 +6,13 @@ public class PlayerMoverment : MonoBehaviour
     
     public float moveSpeed = 5f;
     public float jump = 10f;
+    public LayerMask groundLayer;
+    public Transform groundCheck;
+    public float groundCheckRadius = 0.2f;
     
     private Rigidbody2D rb2d;
     private Vector2 movement;
+    private bool isGrounded;
     
     void Start()
     {
@@ -27,5 +31,12 @@ public class PlayerMoverment : MonoBehaviour
     void FixedUpdate()
     {
         rb2d.linearVelocity = moveSpeed * movement;
+
+        isGrounded = Physics2D.OverlapCircle(groundCheck.position, groundCheckRadius, groundLayer);
+        
+        if ((Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W)) && isGrounded)
+        {
+            rb2d.linearVelocity = new Vector2(rb2d.linearVelocity.x, jump);
+        }
     }
 }
