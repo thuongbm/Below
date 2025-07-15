@@ -11,6 +11,10 @@ public class DigScript : MonoBehaviour
     private Vector3Int currentTilePos;
     private float holdTime = 0f;
 
+    // Thêm biến mới
+    private TileBase originalTile;
+    private bool isCracked = false;
+
     void Start()
     {
         cam = Camera.main;
@@ -30,9 +34,10 @@ public class DigScript : MonoBehaviour
                 {
                     holdTime += Time.deltaTime;
 
-                    if (holdTime >= diggerDelay / 2f && tileMap.GetTile(cellPos) != damageStages[3])
+                    if (holdTime >= diggerDelay / 2f && !isCracked)
                     {
                         tileMap.SetTile(cellPos, damageStages[3]);
+                        isCracked = true;
                         Debug.Log("Cracked");
                     }
 
@@ -42,25 +47,45 @@ public class DigScript : MonoBehaviour
                         Debug.Log("Deleted");
                         holdTime = 0f;
                         currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
+                        isCracked = false;
                     }
                 }
                 else
                 {
                     // Mới chuyển sang tile khác → reset
+                    if (isCracked)
+                    {
+                        tileMap.SetTile(currentTilePos, originalTile); // Trả tile cũ lại
+                        isCracked = false;
+                    }
+
                     currentTilePos = cellPos;
                     holdTime = 0f;
+                    originalTile = tileMap.GetTile(cellPos); // Lưu lại tile gốc
                 }
             }
             else
             {
                 // Không có tile hoặc không được đào
+                if (isCracked)
+                {
+                    tileMap.SetTile(currentTilePos, originalTile);
+                    isCracked = false;
+                }
+
                 holdTime = 0f;
                 currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
             }
         }
         else
         {
-            // Nhả chuột → reset
+            // Nhả chuột → reset lại nếu có nứt
+            if (isCracked)
+            {
+                tileMap.SetTile(currentTilePos, originalTile);
+                isCracked = false;
+            }
+
             holdTime = 0f;
             currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
         }

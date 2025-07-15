@@ -15,6 +15,8 @@ public class PlayerMoverment : MonoBehaviour
     private bool isGrounded;
     private Animator animator;
     private SpriteRenderer spriteRenderer;
+    [SerializeField] private Transform handHolder;
+
     
     void Start()
     {
@@ -50,11 +52,21 @@ public class PlayerMoverment : MonoBehaviour
         {
             animator.SetBool("IsRunning", true);
             spriteRenderer.flipX = false;
+
+            if (handHolder != null)
+            {
+                handHolder.localScale = new Vector3(1, 1, 1);
+            }
         }
         else if (input < 0)
         {
             animator.SetBool("IsRunning", true);
             spriteRenderer.flipX = true;
+
+            if (handHolder != null)
+            {
+                handHolder.localScale = new Vector3(-1, 1, 1);
+            }
         }
         else
         {
