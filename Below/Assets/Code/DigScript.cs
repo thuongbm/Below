@@ -6,6 +6,7 @@ public class DigScript : MonoBehaviour
     public Tilemap tileMap;
     public TileBase[] damageStages; // damageStages[3] là tile nứt
     public float diggerDelay = 4f;
+    public PickaxeControler pickaxeControler;
 
     private Camera cam;
     private Vector3Int currentTilePos;
@@ -33,6 +34,7 @@ public class DigScript : MonoBehaviour
                 if (cellPos == currentTilePos)
                 {
                     holdTime += Time.deltaTime;
+                    pickaxeControler.StartMining(tileMap.CellToWorld(cellPos));
 
                     if (holdTime >= diggerDelay / 2f && !isCracked)
                     {
@@ -48,6 +50,7 @@ public class DigScript : MonoBehaviour
                         holdTime = 0f;
                         currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
                         isCracked = false;
+                        pickaxeControler.StopMining();
                     }
                 }
                 else
@@ -62,6 +65,7 @@ public class DigScript : MonoBehaviour
                     currentTilePos = cellPos;
                     holdTime = 0f;
                     originalTile = tileMap.GetTile(cellPos); // Lưu lại tile gốc
+                    pickaxeControler.StartMining(tileMap.CellToWorld(cellPos));
                 }
             }
             else
@@ -88,6 +92,7 @@ public class DigScript : MonoBehaviour
 
             holdTime = 0f;
             currentTilePos = new Vector3Int(int.MinValue, int.MinValue, int.MinValue);
+            pickaxeControler.StopMining();
         }
     }
 
