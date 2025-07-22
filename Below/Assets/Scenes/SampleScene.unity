@@ -658,6 +658,7 @@ GameObject:
   - component: {fileID: 873483250}
   - component: {fileID: 873483251}
   - component: {fileID: 873483252}
+  - component: {fileID: 873483253}
   m_Layer: 0
   m_Name: Tool
   m_TagString: Untagged
@@ -749,6 +750,21 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bobAmplitude: 0.1
   bobFrequency: 2
+--- !u!114 &873483253
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 873483249}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: dfc284366b7d9e0418fea1dc496e40ef, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  handPosition: {fileID: 507660907}
+  flySpeed: 5
+  rotateSpeed: 360
 --- !u!1 &1140744878
 GameObject:
   m_ObjectHideFlags: 0
@@ -2371,6 +2387,7 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 2e947413d8250534093f48a3aa29cacd, type: 2}
   - {fileID: 11400000, guid: 5bb3379432363d940bb1376f0436e164, type: 2}
   diggerDelay: 4
+  pickaxeControler: {fileID: 873483253}
 --- !u!4 &1551717406
 Transform:
   m_ObjectHideFlags: 0
